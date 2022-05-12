@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,6 +26,11 @@ public class MarcaController {
     @GetMapping("")
     ResponseEntity<Map<String,Object>> getAllMarcas(@RequestParam( defaultValue = "0", required = false) int page, @RequestParam( defaultValue = "10", required = false) int size){
         return new ResponseEntity<>(ControllerUtils.paginationUtils(marcaService.getAllMarcas(PageRequest.of(page, size))), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{keywords}")
+    ResponseEntity<List<Marca>> getAllMarcas(@PathVariable String keywords){
+        return new ResponseEntity<>(marcaService.searchMarca(keywords), HttpStatus.OK);
     }
 
     @GetMapping("/{idMarca}")

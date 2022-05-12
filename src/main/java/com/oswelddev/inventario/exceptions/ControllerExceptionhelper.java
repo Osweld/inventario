@@ -1,5 +1,6 @@
 package com.oswelddev.inventario.exceptions;
 
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
 
 import javax.validation.ConstraintViolation;
 import java.util.Date;
@@ -31,19 +31,18 @@ public class ControllerExceptionhelper {
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     ResponseEntity<ErrorResponse> HandleBadRequestExceptions(DataIntegrityViolationException ex, WebRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
         return new ResponseEntity<>(new ErrorResponse(new Date(),status.value(), status.name(), ex.getMessage(),request.getDescription(false)), HttpStatus.BAD_REQUEST);
     }
 
 
-//    @ExceptionHandler(value = ConstraintViolationException.class)
-//    ResponseEntity<ErrorResponse> HandleValidationsExceptions(ConstraintViolationException ex,WebRequest request) {
-//        Map<String, String> validations = new HashMap<>();
-//        HttpStatus status = HttpStatus.BAD_REQUEST;
-//        for (ConstraintViolation cv : ex.getConstraintViolations()) {
-//            validations.put(cv.getPropertyPath().toString(), cv.getMessage());
-//        }
-//        return new ResponseEntity<>(new ErrorResponse(new Date(), status.value(), status.name(), ex.getMessage(), request.getDescription(false), validations), HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    ResponseEntity<ErrorResponse> HandleValidationsExceptions(ConstraintViolationException ex,WebRequest request) {
+        Map<String, String> validations = new HashMap<>();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(new ErrorResponse(new Date(), status.value(), status.name(), ex.getMessage(), request.getDescription(false), validations), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ErrorResponse> HandleValidationsExceptions(MethodArgumentNotValidException ex,WebRequest request) {

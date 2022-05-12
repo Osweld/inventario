@@ -3,9 +3,12 @@ package com.oswelddev.inventario.services;
 import com.oswelddev.inventario.models.entity.Marca;
 import com.oswelddev.inventario.models.repository.MarcaRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class MarcaServiceImpl implements MarcaService{
@@ -26,6 +29,12 @@ public class MarcaServiceImpl implements MarcaService{
     @Transactional(readOnly = true)
     public Marca getMarcaById(Long idMarca) {
         return marcaRepository.findById(idMarca).orElseThrow();//NoSuchElement...
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Marca> searchMarca(String nombre) {
+        return marcaRepository.findMarcasByNombreContaining(nombre, PageRequest.of(0,5));
     }
 
     @Override
