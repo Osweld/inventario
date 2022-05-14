@@ -7,10 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ArticuloRepository extends JpaRepository<Articulo, Long> {
 
     Page<Articulo> findAllByCategoria(Categoria categoria, Pageable pageable);
     Page<Articulo> findAllByMarca(Marca marca, Pageable pageable);
+
+    List<Articulo> findArticuloByNombreContaining(String nombre,Pageable pageable);
     Page<Articulo> findAllByMarcaAndCategoria(Marca marca,Categoria categoria, Pageable pageable);
 
 }

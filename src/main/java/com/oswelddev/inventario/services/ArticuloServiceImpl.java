@@ -5,9 +5,12 @@ import com.oswelddev.inventario.models.entity.Categoria;
 import com.oswelddev.inventario.models.entity.Marca;
 import com.oswelddev.inventario.models.repository.ArticuloRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ArticuloServiceImpl implements ArticuloService{
@@ -40,6 +43,12 @@ public class ArticuloServiceImpl implements ArticuloService{
     @Transactional(readOnly = true)
     public Page<Articulo> getAllArticulosByMarcaAndCategoria(Long idMarca, Long idCategoria, Pageable pageable) {
         return articuloRepository.findAllByMarcaAndCategoria(new Marca(idMarca),new Categoria(idCategoria),pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Articulo> searchArticulo(String keywords) {
+        return articuloRepository.findArticuloByNombreContaining(keywords, PageRequest.of(0,5));
     }
 
     @Override

@@ -3,9 +3,12 @@ package com.oswelddev.inventario.services;
 import com.oswelddev.inventario.models.entity.Categoria;
 import com.oswelddev.inventario.models.repository.CategoriaRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CategoriaServiceImpl implements CategoriaService{
@@ -27,6 +30,12 @@ public class CategoriaServiceImpl implements CategoriaService{
     @Transactional(readOnly = true)
     public Categoria getCategoriaById(Long idCategoria) {
         return categoriaRepository.findById(idCategoria).orElseThrow();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Categoria> searchCategoria(String keywords) {
+        return categoriaRepository.findCategoriaByNombreContaining(keywords, PageRequest.of(0,5));
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,6 +50,11 @@ public class ArticuloController {
     @GetMapping("/{idArticulo}")
     ResponseEntity<Articulo> getArticulo(@PathVariable Long idArticulo){
         return new ResponseEntity<>(articuloService.getArticulo(idArticulo),HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{keywords}")
+    ResponseEntity<List<Articulo>> searchArticulo(@PathVariable String keywords){
+        return new ResponseEntity<>(articuloService.searchArticulo(keywords),HttpStatus.OK);
     }
 
     @PostMapping("")
