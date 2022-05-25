@@ -1,5 +1,6 @@
 package com.oswelddev.inventario.services;
 
+import com.oswelddev.inventario.exceptions.UniqueValidationException;
 import com.oswelddev.inventario.models.entity.Articulo;
 import com.oswelddev.inventario.models.entity.Categoria;
 import com.oswelddev.inventario.models.entity.Marca;
@@ -48,7 +49,7 @@ public class ArticuloServiceImpl implements ArticuloService{
     @Override
     @Transactional(readOnly = true)
     public List<Articulo> searchArticulo(String keywords) {
-        return articuloRepository.findArticuloByNombreContaining(keywords, PageRequest.of(0,5));
+        return articuloRepository.findArticuloByNombreContainingIgnoreCase(keywords, PageRequest.of(0,5));
     }
 
     @Override
@@ -60,13 +61,20 @@ public class ArticuloServiceImpl implements ArticuloService{
     @Override
     @Transactional
     public Articulo createArticulo(Articulo articulo) {
+        if(articuloRepository.existsByNombre(articulo.getNombre())) throw new UniqueValidationException("Ya existe el nombre del articulo");
+        if(articuloRepository.existsByCodigo(articulo.getCodigo())) throw new UniqueValidationException("Ya existe el codigo del articulo");
         return articuloRepository.save(articulo);
     }
 
     @Override
     @Transactional
     public Articulo editArticulo(Long idArticulo, Articulo articulo) {
+
+
+
         return articuloRepository.findById(idArticulo).map(articuloDB ->{
+            if(!articuloDB.getNombre().equals(articulo.getNombre()) && articuloRepository.existsByNombre(articulo.getNombre())) throw new UniqueValidationException("Ya existe el nombre del articulo");
+            if(!articuloDB.getCodigo().equals(articulo.getCodigo()) && articuloRepository.existsByCodigo(articulo.getCodigo())) throw new UniqueValidationException("Ya existe el codigo del articulo");
             articuloDB.setNombre(articulo.getNombre());
             articuloDB.setDescripcion(articulo.getDescripcion());
             articuloDB.setCodigo(articulo.getCodigo());

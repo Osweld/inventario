@@ -33,6 +33,11 @@ public class CategoriaController {
         return new ResponseEntity<>(categoriaService.getCategoriaById(idCategoria), HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    ResponseEntity<List<Categoria>> getAllCategorias() {
+        return new ResponseEntity<>(categoriaService.getAllCategorias(), HttpStatus.OK);
+    }
+
     @GetMapping("/search/{keywords}")
     ResponseEntity<List<Categoria>> searchCategoria(@PathVariable String keywords) {
         return new ResponseEntity<>(categoriaService.searchCategoria(keywords), HttpStatus.OK);

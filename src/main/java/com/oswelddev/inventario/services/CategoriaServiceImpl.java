@@ -1,5 +1,6 @@
 package com.oswelddev.inventario.services;
 
+import com.oswelddev.inventario.exceptions.UniqueValidationException;
 import com.oswelddev.inventario.models.entity.Categoria;
 import com.oswelddev.inventario.models.repository.CategoriaRepository;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,12 @@ public class CategoriaServiceImpl implements CategoriaService{
 
     @Override
     @Transactional(readOnly = true)
+    public List<Categoria> getAllCategorias() {
+        return categoriaRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Categoria getCategoriaById(Long idCategoria) {
         return categoriaRepository.findById(idCategoria).orElseThrow();
     }
@@ -35,12 +42,13 @@ public class CategoriaServiceImpl implements CategoriaService{
     @Override
     @Transactional(readOnly = true)
     public List<Categoria> searchCategoria(String keywords) {
-        return categoriaRepository.findCategoriaByNombreContaining(keywords, PageRequest.of(0,5));
+        return categoriaRepository.findCategoriaByNombreContainingIgnoreCase(keywords, PageRequest.of(0,5));
     }
 
     @Override
     @Transactional
     public Categoria createCategoria(Categoria categoria) {
+        if(categoriaRepository.existsByNombre(categoria.getNombre())) throw new UniqueValidationException("Ya existe el nombre de la categoria");
         return categoriaRepository.save(categoria);
     }
 
@@ -48,6 +56,7 @@ public class CategoriaServiceImpl implements CategoriaService{
     @Transactional
     public Categoria editCategoria(Long idCategoria, Categoria categoria) {
          return categoriaRepository.findById(idCategoria).map( categoriaDB ->{
+             if(!categoriaDB.getNombre().equals(categoria.getNombre())&&categoriaRepository.existsByNombre(categoria.getNombre())) throw new UniqueValidationException("Ya existe el nombre de la categoria");
              categoriaDB.setNombre(categoria.getNombre());
              categoriaDB.setDescripcion(categoria.getDescripcion());
              return categoriaRepository.save(categoriaDB);

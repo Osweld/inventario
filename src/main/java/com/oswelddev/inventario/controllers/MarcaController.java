@@ -28,8 +28,13 @@ public class MarcaController {
         return new ResponseEntity<>(ControllerUtils.paginationUtils(marcaService.getAllMarcas(PageRequest.of(page, size))), HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    ResponseEntity<List<Marca>> getAllMarcas(){
+        return new ResponseEntity<>(marcaService.getAllMarcas(), HttpStatus.OK);
+    }
+
     @GetMapping("/search/{keywords}")
-    ResponseEntity<List<Marca>> getAllMarcas(@PathVariable String keywords){
+    ResponseEntity<List<Marca>> searchMarcas(@PathVariable String keywords){
         return new ResponseEntity<>(marcaService.searchMarca(keywords), HttpStatus.OK);
     }
 

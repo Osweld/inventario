@@ -9,6 +9,7 @@ import java.util.List;
 public interface MarcaService {
 
     Page<Marca> getAllMarcas(Pageable pageable);
+    List<Marca> getAllMarcas();
     Marca getMarcaById(Long idMarca);
     List<Marca> searchMarca(String nombre);
     Marca createMarca(Marca marca);

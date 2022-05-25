@@ -23,7 +23,7 @@ public class Articulo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_articulo", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NotBlank(message = "El articulo no puede quedar vacio")
     @Size(max = 45, message = "El articulo no puede exceder los 45 caracteres")
@@ -51,7 +51,7 @@ public class Articulo implements Serializable {
     private BigDecimal costo;
 
     @Column(name = "activo")
-    private Double activo;
+    private Boolean activo;
 
     @NotNull(message = "Debe seleccionar una categoria")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

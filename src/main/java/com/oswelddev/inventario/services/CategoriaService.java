@@ -9,6 +9,9 @@ import java.util.List;
 public interface CategoriaService {
 
     Page<Categoria> getAllCategorias(Pageable pageable);
+
+    List<Categoria> getAllCategorias();
+
     Categoria getCategoriaById(Long idCategoria);
 
     List<Categoria> searchCategoria(String keywords);

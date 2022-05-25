@@ -1,5 +1,6 @@
 package com.oswelddev.inventario.services;
 
+import com.oswelddev.inventario.exceptions.UniqueValidationException;
 import com.oswelddev.inventario.models.entity.Marca;
 import com.oswelddev.inventario.models.repository.MarcaRepository;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,12 @@ public class MarcaServiceImpl implements MarcaService{
 
     @Override
     @Transactional(readOnly = true)
+    public List<Marca> getAllMarcas() {
+        return marcaRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Marca getMarcaById(Long idMarca) {
         return marcaRepository.findById(idMarca).orElseThrow();//NoSuchElement...
     }
@@ -34,19 +41,22 @@ public class MarcaServiceImpl implements MarcaService{
     @Override
     @Transactional(readOnly = true)
     public List<Marca> searchMarca(String nombre) {
-        return marcaRepository.findMarcasByNombreContaining(nombre, PageRequest.of(0,5));
+        return marcaRepository.findMarcasByNombreContainingIgnoreCase(nombre, PageRequest.of(0,5));
     }
 
     @Override
     @Transactional
     public Marca createMarca(Marca marca) {
+        if(marcaRepository.existsByNombre(marca.getNombre())) throw new UniqueValidationException("Ya existe el nombre de la marca");
         return marcaRepository.save(marca);
     }
 
     @Override
     @Transactional
     public Marca editMarca(Long idMarca, Marca marca) {
+
         return marcaRepository.findById(idMarca).map( marcaDB -> {
+            if(!marcaDB.getNombre().equals(marca.getNombre()) && marcaRepository.existsByNombre(marca.getNombre())) throw new UniqueValidationException("Ya existe el nombre de la marca");
             marcaDB.setNombre(marca.getNombre());
             marcaDB.setDescripcion(marca.getDescripcion());
             return marcaRepository.save(marcaDB);

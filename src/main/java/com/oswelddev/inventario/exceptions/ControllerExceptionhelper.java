@@ -28,11 +28,18 @@ public class ControllerExceptionhelper {
         return new ResponseEntity<>(new ErrorResponse(new Date(),status.value(), status.name(), ex.getMessage(),request.getDescription(false)), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
     ResponseEntity<ErrorResponse> HandleBadRequestExceptions(DataIntegrityViolationException ex, WebRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
         return new ResponseEntity<>(new ErrorResponse(new Date(),status.value(), status.name(), ex.getMessage(),request.getDescription(false)), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {UniqueValidationException.class})
+    ResponseEntity<ErrorResponse> HandleBadRequestExceptions(Exception ex, WebRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(new ErrorResponse(new Date(),status.value(), status.name(), ex.getMessage(),request.getDescription(false),Map.of("unique",ex.getMessage())), HttpStatus.BAD_REQUEST);
     }
 
 
@@ -48,7 +55,6 @@ public class ControllerExceptionhelper {
     ResponseEntity<ErrorResponse> HandleValidationsExceptions(MethodArgumentNotValidException ex,WebRequest request) {
         Map<String, String> validations = new HashMap<>();
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        System.out.println("gg");
         for (FieldError fieldError : ex.getFieldErrors()) {
             validations.put(fieldError.getField(), fieldError.getDefaultMessage());
         }

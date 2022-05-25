@@ -14,7 +14,10 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Long> {
     Page<Articulo> findAllByCategoria(Categoria categoria, Pageable pageable);
     Page<Articulo> findAllByMarca(Marca marca, Pageable pageable);
 
-    List<Articulo> findArticuloByNombreContaining(String nombre,Pageable pageable);
+    List<Articulo> findArticuloByNombreContainingIgnoreCase(String nombre,Pageable pageable);
     Page<Articulo> findAllByMarcaAndCategoria(Marca marca,Categoria categoria, Pageable pageable);
+
+    Boolean existsByNombre(String nombre);
+    Boolean existsByCodigo(String codigo);
 
 }
